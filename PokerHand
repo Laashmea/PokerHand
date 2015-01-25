@@ -1,0 +1,165 @@
+import java.awt.*; 
+import java.awt.event.*;
+import javax.swing.*;
+
+public class PokerHand
+{
+  public static void main (String[] args)
+  {
+    PokerSwing frame = new PokerSwing( "Pokerhand") ; 
+    frame.setSize( 410, 210 );     
+    frame.setVisible( true );
+    frame.setResizable ( false );
+  }
+}
+
+class PokerSwing extends JFrame implements ActionListener 
+{
+  JLabel label1 = new JLabel ("Player 1: Enter card values.");
+  JLabel label2 = new JLabel ("Player 2: Enter card values.");
+  JLabel label3 = new JLabel (); 
+  TextField text1  = new TextField( 30 );
+  TextField text2  = new TextField( 30 );
+  JButton compare = new JButton ("Compare");
+  JLabel note = new JLabel();
+  JButton clear = new JButton ("Clear");
+  JButton exit = new JButton ("Fold");
+  JPanel  inputPanel = new JPanel();
+  JPanel  outputPanel = new JPanel();
+  JPanel  buttonPanel = new JPanel();
+  
+  public PokerSwing ( String title ) 
+  {  
+    super( title );
+    setLayout( new FlowLayout() );
+    setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );   
+    compare.setActionCommand ("compare");
+    clear.setActionCommand ("clear");
+    exit.setActionCommand ("exit");
+    compare.addActionListener( this );
+    clear.addActionListener( this );
+    exit.addActionListener( this );
+    
+    inputPanel.setPreferredSize( new Dimension(300,100) ) ;
+    
+    //frame
+    setLayout( new BorderLayout() );
+    add( inputPanel, BorderLayout.NORTH );
+    add( outputPanel, BorderLayout.CENTER );
+    add( buttonPanel, BorderLayout.SOUTH );
+    
+    inputPanel.add(label1); inputPanel.add (text1);
+    inputPanel.add(label2); inputPanel.add (text2);
+    inputPanel.add (compare);
+    
+    outputPanel.add(label3);
+    outputPanel.add(note);
+    
+    buttonPanel.add(clear);buttonPanel.add(exit);
+  }
+  
+  public void actionPerformed( ActionEvent evt )
+  {
+    if (evt.getActionCommand().equals ("compare")) // compare button
+    {
+      String s1 = text1.getText(); String s2 = text2.getText();
+      CountCards set1 = new CountCards (s1); CountCards set2 = new CountCards (s2); // manipulate input -> separates values from each other
+      
+      String [] cardList1 = set1.getCards (); String [] cardList2 = set2.getCards ();
+      
+      if (cardList1 != null || cardList2 != null) // if a hand has been inputed
+      {
+        
+        CardsQuick sort1 = new CardsQuick (cardList1); CardsQuick sort2 = new CardsQuick (cardList2);
+        String [] hand1 = sort1.quickCards(); String [] hand2 = sort2.quickCards();
+        
+        if (sort1.ifSortError() || set1.ifError()) // if there is an error in the first hand
+        {
+          label3.setText ("");
+          note.setText("Player 1: Invalid card value. Re-type value");
+        }
+        else if (sort2.ifSortError() || set2.ifError()) // if there is an error in the second hand
+        {
+          label3.setText("");
+          note.setText("Player 2: Invalid card value. Re-type value");
+        }
+        else
+        {
+          PokerScore score1 = new PokerScore (hand1); // find score for first hand
+          PokerScore score2 = new PokerScore (hand2); // find score for second hand
+
+          String doneHand1 = "";
+          String doneHand2 = "";
+          
+          // format card values
+          for (int i = 0; i < 5;i++)
+          {
+            if (i < 4)
+            {
+              doneHand1 = doneHand1 + hand1[i] + "-";
+              doneHand2 = doneHand2 + hand2[i] + "-";
+            }
+            else
+            {
+              doneHand1 = doneHand1 + hand1[i];
+              doneHand2 = doneHand2 + hand2[i];
+            }
+          }
+          
+          if (score1.getScore() < score2.getScore()) // if the first hand scores less than the second hand
+          {
+            label3.setText("The second hand " +  doneHand2 + " will beat the first hand " + doneHand1);
+            note.setText("");
+          }
+          else if (score1.getScore() > score2.getScore()) // if the first hand score is greater than the second hand
+          {
+            label3.setText("The first hand " + doneHand1 + " will beat the second hand " + doneHand2);
+            note.setText("");
+          }
+          else // both scores are equal
+          {
+            label3.setText("The first hand " + doneHand1 + " ties with " + doneHand2);
+            note.setText("");
+          }       
+        }
+      }
+      
+      // too many cards entered
+      if (set1.ifExcess())
+      {
+        label3.setText("");
+        note.setText("Player 1: Excess of cards");
+      }
+      else if (set2.ifExcess()) 
+      {
+        label3.setText("");
+        note.setText("Player 2: Excess of cards");
+      }
+      // not enough or no cards entered 
+      if (set1.ifUnder() || set1.ifMissing()) 
+      {
+        label3.setText("");
+        note.setText("Player 1: Under amount of cards");
+      }
+      else if (set2.ifUnder() || set2.ifMissing())
+      {
+        label3.setText("");
+        note.setText("Player 2: Under amount of cards");
+      }
+
+    }
+    
+    else if (evt.getActionCommand().equals ("clear")) // clear button clears all new text
+    {
+      text1.setText ("");
+      text2.setText ("");
+      label3.setText("");
+      note.setText("");
+    }
+    
+    else if (evt.getActionCommand().equals ("exit")) // fold button exits the program
+    {
+      System.exit (0);
+    }
+  }
+}
