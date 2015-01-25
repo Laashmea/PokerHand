@@ -1,0 +1,112 @@
+class CountCards 
+{
+  private String cardsString, cardList, set;
+  private int arrNum = 0;
+  private int cLength;
+  boolean possible = false;
+  boolean error = false;
+  private boolean missing = false;
+  private boolean excess = false;
+  private boolean under = false;
+  private String [] cardArr = new String [5];
+  
+  CountCards (String ca)
+  {
+    cardsString = ca;
+    makeSuitList();
+  }
+  
+  void makeSuitList()
+  {   
+    cLength = cardsString.length();
+    
+    if (cardsString.equals("")) // checks to see if anything was inputed
+    {
+      missing = true;
+    }
+    
+    else
+    {     
+      try 
+      {
+        for (int place = 0; place < cLength; place+=2)
+        {
+          set = cardsString.substring (place, place + 2);
+          
+          if (set.charAt(0) == ('s') || set.charAt(0) == 'S') // find spade values
+          {
+            cardList = set;
+          }
+          else if (set.charAt(0) == ('h') || set.charAt(0) == 'H') // find heart values
+          {
+            cardList =  set;
+          }
+          else if (set.charAt(0) == ('d') || set.charAt(0) == 'D') // find diamond values
+          {
+            cardList = set;
+          }
+          else if (set.charAt(0) == ('c') || set.charAt(0) == 'C') // find club values
+          {
+            cardList =  set;
+          }
+          else
+          {
+            error = true; // error if any other letters or numbers are used
+          }
+          
+          //Make all letters uppercase letters
+          if (set.charAt(1) == 'a' || set.charAt(1) == 'k' || set.charAt(1) == 'q' || set.charAt(1) == 'j' || set.charAt(1) == 't')
+          {
+            cardList = cardList.toUpperCase ();
+          }
+          if (set.charAt (0) == 's' || set.charAt (0) == 'h' || set.charAt (0) == 'd' || set.charAt (0) == 'c')
+          {
+            cardList = cardList.replace ('s','S');
+            cardList = cardList.replace ('h', 'H');
+            cardList = cardList.replace ('d','D');
+            cardList = cardList.replace ('c', 'C');
+          }
+          
+          cardArr [arrNum] = cardList; // add card value to a list
+          arrNum++;
+          
+        }
+      }
+      
+      catch (Exception ex)
+      {
+        error = true;
+      }
+      
+      if (cLength < 10) // check to see if not enough cards were inputed
+      {
+        under = true; 
+      }
+      else if (cLength > 10) // check to see if too many cards were inputed
+      {
+        excess = true;
+      }
+    } 
+  } // makeSuitList() method
+  
+  String [] getCards() // send list of card values
+  {
+    return cardArr;
+  }
+  boolean ifError()
+  {
+    return error;
+  } 
+  boolean ifMissing()
+  {
+    return missing;
+  }
+  boolean ifExcess()
+  {
+    return excess;
+  }
+  boolean ifUnder()
+  {
+    return under;
+  }
+} // CountCards class
