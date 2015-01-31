@@ -1,4 +1,5 @@
-class PokerScore {
+class PokerScore 
+{
   private String aVal [];
   private int [] cVal = new int [5];
   private int score = 0;
@@ -10,15 +11,18 @@ class PokerScore {
   private int count = 0;
   private String cardVal;
  
-  PokerScore (String v [])  {
+  PokerScore (String v [])  
+  {
     aVal = v;
     countSuit();
     playerHand();
   }
   
-  void countSuit()   {
+  void countSuit()   
+  {
     // give numeric values to Ace, King, Queen, Jack, and Ten (T)
-    for (int ins = 0; ins < cVal.length; ins++) {
+    for (int ins = 0; ins < cVal.length; ins++) 
+    {
       cardVal = aVal[ins].charAt(1) + "";     
       cardVal = cardVal.replace ("A", "14"); // make Ace value the number 14
       cardVal = cardVal.replace ("K", "13"); // make King value the number 13
@@ -29,23 +33,29 @@ class PokerScore {
     }
     
     // count how many cards of each suit
-    for (int i = 0; i < aVal.length; i++)  {
-      if (aVal[i].charAt (0) == 'C')  {
+    for (int i = 0; i < aVal.length; i++)  
+    {
+      if (aVal[i].charAt (0) == 'C')  
+      {
         c++; // count number of clubs
       }
-      else if (aVal[i].charAt (0) == 'D')  {
+      else if (aVal[i].charAt (0) == 'D')  
+      {
         d++; // count number of diamonds
       }
-      else if (aVal[i].charAt (0) == 'H')  {
+      else if (aVal[i].charAt (0) == 'H')  
+      {
         h++; // count number of hearts
       }
-      else if (aVal[i].charAt (0) == 'S')  {
+      else if (aVal[i].charAt (0) == 'S')  
+      {
         s++; // count number of spades
       }
     }
-  }
+  } // countSuit method
   
-  void playerHand()  {
+  void playerHand()  
+  {
     int num = 0;
     boolean fullH = false;
     boolean dblPair = false;
@@ -53,97 +63,119 @@ class PokerScore {
     int record = 0;
     
     // check for card with the same value
-    for (int ctr = 0; ctr < cVal.length; ctr ++) {    
-      if (num == 3)  {
-      
+    for (int ctr = 0; ctr < cVal.length; ctr ++) 
+    {    
+      if (num == 3)  
+      {
       // check for full house
-        if (cVal[3] == cVal[4] || cVal[0] == cVal[1] ) {  
+        if (cVal[3] == cVal[4] || cVal[0] == cVal[1] ) 
+        {  
         fullH = true;
         }
       }
-      else if (num == 2)  {
+      else if (num == 2) 
+      {
         // check for two pairs
         if ((cVal[0] == cVal[1] && cVal[2] == cVal[3]) || (cVal[0] == cVal[1] && cVal[3] == cVal[4])
-        ||(cVal[1] == cVal[2] && cVal[3] == cVal[4])) {
+        ||(cVal[1] == cVal[2] && cVal[3] == cVal[4])) 
+        {
           dblPair = true;
         }         
       }
-      else if (count == cVal[ctr])  {
+      else if (count == cVal[ctr])  
+      {
         num++; // count similar nu,bers
         record = ctr; // highest number for appropriate score
       }
-      else  {
+      else  
+      {
         num=1;
       }
       count = cVal[ctr];
     }
     
     // check if there is a straight
-    for (int i = 0; i < (cVal.length-1); i++)  {
-      if (cVal[i] != (cVal [i+1]+1))  {
+    for (int i = 0; i < (cVal.length-1); i++) 
+    {
+      if (cVal[i] != (cVal [i+1]+1)) 
+      {
         checkStr = false; 
       }
     }
     
-    if (checkStr == true || (cVal[0]==14 &&cVal[1]==5 && cVal[2]==4 &&cVal[3]==3&&cVal[4]==2))  {
+    if (checkStr == true || (cVal[0]==14 &&cVal[1]==5 && cVal[2]==4 &&cVal[3]==3&&cVal[4]==2)) 
+    {
       // if there is a flush
       if (c==5||d==5||h==5||s==5) {
-        if ((cVal[0]==14)&&(cVal[1]==13)&&(cVal[2]==12)&&(cVal[3]==11)&&(cVal[4]==10))  {
+        if ((cVal[0]==14)&&(cVal[1]==13)&&(cVal[2]==12)&&(cVal[3]==11)&&(cVal[4]==10)) 
+        {
           // Royal Flush (1)
           score = 1000;
         }
-        else {
+        else 
+        {
           // Straight Flush (2)
           score = 900 + cVal[0];
         }
       }
-      else   {
+      else   
+      {
         //Straight (6)
         score = 500 + cVal[0];
       }
     }
     
-    else if (c==5||d==5||h==5||s==5) {
+    else if (c==5||d==5||h==5||s==5) 
+    {
       // Flush (5)
       score = 600 + cVal[0];
     }
     
-    else if (num == 4) {
+    else if (num == 4) 
+    {
       //Four of a kind (3)
       score = 800 + cVal[record];
     }
     
-    else if (num == 3)  {
-      if (fullH == true) {
+    else if (num == 3)  
+    {
+      if (fullH == true) 
+      {
         // Full House (4)
         score = 700 + cVal[record];
       }
-      else {
+      else 
+      {
         // 3 of a Kind (7)
         score = 400 + cVal[record];
       }
     }
     
-    else if (num == 2)  {
-      if (dblPair == true) {
+    else if (num == 2) 
+    {
+      if (dblPair == true) 
+      {
         // Double Pair (8)
         score = 300 + cVal[record];
       }
-      else  {
+      else  
+      {
         // Pair (9)
         score = 200 + cVal[record];
       }
     }
     
-    else {
+    else 
+    {
       // Highest Card (10)
       score = cVal[0]*10 + cVal[1];
     }
     
     play = score;
-  }
+  } // playerHand method
   
-  int getScore() {
+  int getScore() 
+  {
     return play;
   }
 } // PokerScore class
